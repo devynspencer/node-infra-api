@@ -1,30 +1,34 @@
 import { Controller, Get, Post, Param, Delete, Put, Body } from '@nestjs/common';
 import { AddServerDto } from './dto/add-server.dto';
+import { ServerService } from './server.service';
+import { UpdateServerDto } from './dto/update-server.dto';
 
 @Controller('servers')
 export class ServersController {
+  constructor(private readonly serverService: ServerService) {}
+
   @Get()
-  findAll(): string {
-    return 'All servers returned';
+  findAll() {
+    return this.serverService.findAll();
   }
 
   @Get(':id')
   find(@Param() params) {
-    return `Server ${params.id} returned`;
+    return this.serverService.find(params.id);
   }
 
   @Post()
   add(@Body() dto: AddServerDto) {
-    return `Server ${dto.hostname} added`;
+    return this.serverService.add(dto);
   }
 
   @Delete(':id')
-  remove(@Param() params): string {
-    return `Server ${params.id} removed`;
+  remove(@Param() params) {
+    return this.serverService.remove(params.id);
   }
 
   @Put(':id')
-  update(@Param() params): string {
-    return `Server ${params.id} updated`;
+  update(@Param('id') id: number, dto: UpdateServerDto) {
+    return this.serverService.update(id, dto);
   }
 }
