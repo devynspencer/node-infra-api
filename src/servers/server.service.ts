@@ -1,31 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { Server } from './interfaces/server.interface';
+import { UpdateServerDto } from './dto/update-server.dto';
 
 @Injectable()
 export class ServerService {
   private readonly servers: Server[] = [];
 
-  constructor(servers?: Server[]) {
-    this.servers = servers || [];
-  }
-
   findAll(): Server[] {
     return this.servers;
   }
 
-  find(id: number) {
+  find(id: number): Server {
     return this.servers[id];
   }
 
-  add(server: Server) {
+  add(server: Server): Server {
     this.servers.push(server);
+    return server;
   }
 
-  remove(id: number) {
+  remove(id: number): Server {
+    const server = this.servers[id];
     this.servers.splice(id, 1);
+    return server;
   }
 
-  update(id: number, server: Server) {
+  update(id: number, server: Server): Server {
     this.servers[id] = server;
+    return this.servers[id];
   }
 }
