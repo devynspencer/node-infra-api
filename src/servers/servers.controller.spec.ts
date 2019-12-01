@@ -22,7 +22,7 @@ describe('ServersController', () => {
     });
 
     it('adds a server', () => {
-      expect(serversController.add({ hostname: 'srv03' })).toBe('Server srv03 added');
+      expect(serversController.add({ hostname: 'srv03', role: 'none' })).toBe('Server srv03 added');
     });
 
     it('removes a server by id', () => {

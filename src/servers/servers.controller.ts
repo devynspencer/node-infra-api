@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, Put, Body } from '@nestjs/common';
+import { AddServerDto } from './dto/add-server.dto';
 
 @Controller('servers')
 export class ServersController {
@@ -13,8 +14,8 @@ export class ServersController {
   }
 
   @Post()
-  add(@Param() params): string {
-    return `Server ${params.hostname} added`;
+  add(@Body() dto: AddServerDto) {
+    return `Server ${dto.hostname} added`;
   }
 
   @Delete(':id')
