@@ -5,13 +5,21 @@ Node/NestJS API for infrastructure assets, statistics, and health
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Setup
+
+Install application dependencies.
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+Start a container environment containing databases and other external requirements. Configurable via environment variables from an `.env` file.
+
+```bash
+docker-compose up --detach
+```
+
+## Run
 
 ```bash
 # development
@@ -36,17 +44,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
