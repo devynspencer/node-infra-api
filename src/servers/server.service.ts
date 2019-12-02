@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { Server } from './interfaces/server.interface';
 import { UpdateServerDto } from './dto/update-server.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { AddServerDto } from './dto/add-server.dto';
 
 @Injectable()
 export class ServerService {
-  private readonly servers: Server[] = [];
+  constructor(@InjectModel('Server') private readonly serverModel: Model<Server>) {}
 
-  findAll(): Server[] {
-    return this.servers;
+  async findAll(): Promise<Server[]> {
+    return await this.serverModel.find().exec();
   }
 
-  find(id: number): Server {
-    return this.servers[id];
+  async find(id: number): Promise<Server> {
+    return await this.serverModel.findById(id);
   }
 
-  add(server: Server): Server {
-    this.servers.push(server);
-    return server;
+  async add(addServerDto: AddServerDto): Promise<Server> {
+    const server = new this.serverModel(addServerDto);
+    return await server.save();
   }
 
-  remove(id: number): Server {
-    const server = this.servers[id];
-    this.servers.splice(id, 1);
-    return server;
+  async remove(id: number): Promise<Server> {
+    return await this.serverModel.findByIdAndDelete(id);
   }
 
-  update(id: number, server: Server): Server {
-    this.servers[id] = server;
-    return this.servers[id];
+  async update(id: number, updateDto: UpdateServerDto): Promise<Server> {
+    return await this.serverModel.findByIdAndUpdate(id, updateDto);
   }
 }
