@@ -4,49 +4,71 @@ import { ServerService } from './server.service';
 
 describe('ServersController', () => {
   let serversController: ServersController;
-  let serverService: ServerService;
+
+  const mockServers = [
+    { hostname: 'tst01', role: 'test' },
+    { hostname: 'tst02', role: 'none' },
+    { hostname: 'tst03', role: 'none' },
+    { hostname: 'tst04', role: 'none' },
+    { hostname: 'tst05', role: 'none' },
+    { hostname: 'tst06', role: 'none' }
+  ];
+
+  class MockServerService {
+    findAll() {
+      return mockServers;
+    }
+
+    find() {
+      return mockServers[1];
+    }
+
+    add() {
+      return mockServers[6];
+    }
+
+    remove() {
+      return mockServers[3];
+    }
+
+    update() {
+      return mockServers[2];
+    }
+  }
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [ServersController],
-      providers: [ServerService]
+      providers: [
+        {
+          provide: 'ServerService',
+          useClass: MockServerService
+        }
+      ]
     }).compile();
 
-    serversController = app.get<ServersController>(ServersController);
-
-    const mockServers = [
-      { hostname: 'srv00', role: 'none' },
-      { hostname: 'srv01', role: 'web' },
-      { hostname: 'srv02', role: 'database' },
-      { hostname: 'srv03', role: 'none' },
-      { hostname: 'srv04', role: 'proxy' },
-      { hostname: 'srv05', role: 'app' }
-    ];
-
-    serverService = app.get<ServerService>(ServerService);
-
-    mockServers.forEach((server) => serverService.add(server));
+    serversController = module.get<ServersController>(ServersController);
   });
 
   describe('/servers', () => {
-    it('returns all servers', () => {
-      expect(serversController.findAll());
+    it('returns all servers', async () => {
+      expect(await serversController.findAll()).toBe(mockServers);
     });
 
-    it('returns a server by id', () => {
-      expect(serversController.find({ id: 2 }).hostname).toBe('srv02');
+    it('returns a server by id', async () => {
+      expect(await serversController.find(1)).toBe(mockServers[1]);
     });
 
-    it('adds a server', () => {
-      expect(serversController.add({ hostname: 'srv06', role: 'none' }).hostname).toBe('srv06');
+    it('adds a server', async () => {
+      expect(await serversController.add(mockServers[6])).toBe(mockServers[6]);
     });
 
-    it('removes a server by id', () => {
-      expect(serversController.remove({ id: 4 }).hostname).toBe('srv04');
+    it('removes a server by id', async () => {
+      expect(await serversController.remove(3)).toBe(mockServers[3]);
     });
 
-    it('updates a server', () => {
-      expect(serversController.update(5, { hostname: 'srv05', role: 'new_role' }).hostname).toBe('srv05');
+    it('updates a server', async () => {
+      expect(await serversController.update(2, mockServers[2])).toBe(mockServers[2]);
     });
   });
 });
